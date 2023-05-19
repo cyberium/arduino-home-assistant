@@ -34,14 +34,14 @@ public:
      */
     HABaseDeviceType(
         const __FlashStringHelper* componentName,
-        const char* uniqueId
+        std::string const& uniqueId
     );
 
     /**
      * Returns unique ID of the device type.
      */
     inline const char* uniqueId() const
-        { return _uniqueId; }
+        { return _uniqueId.c_str(); }
 
     /**
      * Returns component name defined by the device type.
@@ -68,7 +68,7 @@ public:
      *
      * @param name The device type name.
      */
-    inline void setName(const char* name)
+    inline void setName(std::string const& name)
         { _name = name; }
 
     /**
@@ -76,7 +76,7 @@ public:
      * It can be nullptr if there is no name assigned.
      */
     inline const char* getName() const
-        { return _name; }
+        { return _name.c_str(); }
 
     /**
      * Sets availability of the device type.
@@ -203,14 +203,17 @@ protected:
     /// The component name that was assigned via the constructor.
     const __FlashStringHelper* const _componentName;
 
-    /// The unique ID that was assigned via the constructor.
-    const char* _uniqueId;
-
-    /// The name that was set using setName method. It can be nullptr.
-    const char* _name;
 
     /// HASerializer that belongs to this device type. It can be nullptr.
     HASerializer* _serializer;
+
+    /**
+     * Sets uniqueId of the device.
+     *
+     * @param uId The new device uniqueId.
+     */
+    inline void setUniqueId(std::string const& uId)
+        { _uniqueId = uId; }
 
 private:
     enum Availability {
@@ -218,6 +221,12 @@ private:
         AvailabilityOnline,
         AvailabilityOffline
     };
+
+    /// The unique ID that was assigned via the constructor.
+    std::string _uniqueId;
+
+    /// The name that was set using setName method. It can be nullptr.
+    std::string _name;
 
     /// The current availability of this device type. AvailabilityDefault means that the initial availability was never set.
     Availability _availability;

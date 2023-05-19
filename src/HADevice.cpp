@@ -5,14 +5,12 @@
 #include "utils/HASerializer.h"
 
 #define HADEVICE_INIT \
-    _ownsUniqueId(false), \
     _serializer(new HASerializer(nullptr, 5)), \
     _availabilityTopic(nullptr), \
     _sharedAvailability(false), \
     _available(true) // device will be available by default
 
 HADevice::HADevice() :
-    _uniqueId(nullptr),
     HADEVICE_INIT
 {
 
@@ -22,15 +20,14 @@ HADevice::HADevice(const char* uniqueId) :
     _uniqueId(uniqueId),
     HADEVICE_INIT
 {
-    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), _uniqueId);
+    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), getUniqueId());
 }
 
 HADevice::HADevice(const byte* uniqueId, const uint16_t length) :
     _uniqueId(HAUtils::byteArrayToStr(uniqueId, length)),
     HADEVICE_INIT
 {
-    _ownsUniqueId = true;
-    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), _uniqueId);
+    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), getUniqueId());
 }
 
 HADevice::~HADevice()
@@ -40,21 +37,29 @@ HADevice::~HADevice()
     if (_availabilityTopic) {
         delete _availabilityTopic;
     }
-
-    if (_ownsUniqueId) {
-        delete[] _uniqueId;
-    }
 }
 
 bool HADevice::setUniqueId(const byte* uniqueId, const uint16_t length)
 {
-    if (_uniqueId) {
+    if (!_uniqueId.empty()) {
         return false; // unique ID cannot be changed at runtime once it's set
     }
 
-    _uniqueId = HAUtils::byteArrayToStr(uniqueId, length);
-    _ownsUniqueId = true;
-    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), _uniqueId);
+    auto buildedId = HAUtils::byteArrayToStr(uniqueId, length);
+    _uniqueId = buildedId;
+    delete buildedId;
+    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), getUniqueId());
+    return true;
+}
+
+bool HADevice::setUniqueId(std::string const& uId)
+{
+    if (!_uniqueId.empty()) {
+        return false; // unique ID cannot be changed at runtime once it's set
+    }
+
+    _uniqueId = uId;
+    _serializer->set(AHATOFSTR(HADeviceIdentifiersProperty), getUniqueId());
     return true;
 }
 

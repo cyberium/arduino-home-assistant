@@ -45,7 +45,7 @@ public:
      * Returns pointer to the unique ID. It can be nullptr if the device has no ID assigned.
      */
     inline const char* getUniqueId() const
-        { return _uniqueId; }
+        { return _uniqueId.c_str(); }
 
     /**
      * Returns the instance of the HASerializer used by the device.
@@ -82,6 +82,15 @@ public:
      * @note The unique ID can be set only once (via constructor or using this method).
      */
     bool setUniqueId(const byte* uniqueId, const uint16_t length);
+
+    /**
+     * Sets unique ID of the device based on the given byte array.
+     * Each byte is converted into a hex string representation, so the final length of the unique ID will be twice as given.
+     *
+     * @param uId string array that's going to be converted into the string.
+     * @note The unique ID can be set only once (via constructor or using this method).
+     */
+    bool setUniqueId(std::string const& uId);
 
     /**
      * Sets the "manufacturer" property that's going to be displayed in the Home Assistant.
@@ -139,10 +148,7 @@ public:
 
 private:
     /// The unique ID of the device. It can be a memory allocated by HADevice::setUniqueId method.
-    const char* _uniqueId;
-
-    /// Specifies whether HADevice class owns the _uniqueId pointer.
-    bool _ownsUniqueId;
+    std::string _uniqueId;
 
     /// JSON serializer of the HADevice class. It's allocated in the constructor.
     HASerializer* _serializer;

@@ -6,11 +6,11 @@
 
 HABaseDeviceType::HABaseDeviceType(
     const __FlashStringHelper* componentName,
-    const char* uniqueId
+    std::string const& uniqueId
 ) :
     _componentName(componentName),
     _uniqueId(uniqueId),
-    _name(nullptr),
+    _name("noname"),
     _serializer(nullptr),
     _availability(AvailabilityDefault)
 {

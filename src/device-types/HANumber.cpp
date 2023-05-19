@@ -43,10 +43,9 @@ void HANumber::buildSerializer()
     }
 
     _serializer = new HASerializer(this, 16); // 16 - max properties nb
-
-    _serializer->set(AHATOFSTR(HANameProperty), _name);
-    _serializer->set(AHATOFSTR(HAUniqueIdProperty), _uniqueId);
-    _serializer->set(AHATOFSTR(HAObjectIdProperty), _uniqueId);
+    _serializer->set(AHATOFSTR(HANameProperty), getName());
+    _serializer->set(AHATOFSTR(HAUniqueIdProperty), uniqueId());
+    _serializer->set(AHATOFSTR(HAObjectIdProperty), uniqueId());
     _serializer->set(AHATOFSTR(HADeviceClassProperty), _class);
     _serializer->set(AHATOFSTR(HAIconProperty), _icon);
     _serializer->set(AHATOFSTR(HAUnitOfMeasurementProperty), _unitOfMeasurement);

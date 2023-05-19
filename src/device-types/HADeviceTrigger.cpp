@@ -46,9 +46,7 @@ HADeviceTrigger::HADeviceTrigger(TriggerType type, TriggerSubtype subtype) :
 
 HADeviceTrigger::~HADeviceTrigger()
 {
-    if (_uniqueId) {
-        delete _uniqueId;
-    }
+
 }
 
 bool HADeviceTrigger::trigger()
@@ -137,7 +135,8 @@ void HADeviceTrigger::buildUniqueId()
         strcat(id, _subtype);
     }
 
-    _uniqueId = id;
+    setUniqueId(id);
+    delete id;
 }
 
 const char* HADeviceTrigger::determineProgmemType(TriggerType type) const

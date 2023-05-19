@@ -12,7 +12,7 @@
  * You can find more information about this entity in the Home Assistant documentation:
  * https://www.home-assistant.io/integrations/device_tracker.mqtt/
  */
-class HADeviceTracker : public HABaseDeviceType
+class HADeviceTracker : HABaseDeviceType
 {
 public:
     /// Available source types of the tracker.
@@ -89,7 +89,7 @@ protected:
 private:
    /**
      * Publishes the MQTT message with the given state.
-     * 
+     *
      * @param state The state to publish.
      * @returns Returns `true` if the MQTT message has been published successfully.
      */
